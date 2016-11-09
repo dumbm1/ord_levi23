@@ -8,13 +8,13 @@
 //@target illustrator
 (function addRectByTxtSel () {
   var d        = activeDocument,
-      fr       = d.textFrames[0],
+      txtFrm   = selection.parent.textFrames[0],
       re       = /\s/gmi,
       marg     = 2,
       col      = new CMYKColor (),
 
-      selStart = fr.textSelection[0].characterOffset - 1, // first selected char
-      selLen   = fr.textSelection[0].length, // text selection lenght
+      selStart = txtFrm.textSelection[0].characterOffset - 1, // first selected char
+      selLen   = txtFrm.textSelection[0].length, // text selection lenght
       selEnd   = selLen + selStart - 1, // last selected char
 
       fixSelLen, selSpaces,
@@ -27,13 +27,13 @@
   col.yellow  = 100;
 
   fixSelLen = selLen;
-  selSpaces = fr.textSelection[0].contents.match (re);
+  selSpaces = txtFrm.textSelection[0].contents.match (re);
   if (selSpaces) {
     fixSelLen = selLen - selSpaces.length;
   }
 
-  past        = fr.textRange.characters[selEnd + 1];
-  past.length = fr.contents.length - selEnd - 1;
+  past        = txtFrm.textRange.characters[selEnd + 1];
+  past.length = txtFrm.contents.length - selEnd - 1;
 
   fixPastLen = past.length;
   pastSpaces = past.contents.match (re);
@@ -41,7 +41,7 @@
     fixPastLen = past.length - pastSpaces.length;
   }
 
-  frCurv = (fr.duplicate ()).createOutline ();
+  frCurv = (txtFrm.duplicate ()).createOutline ();
 
   for (var i = fixPastLen; i < fixPastLen + fixSelLen; i++) {
     var obj1 = frCurv.pageItems[i];
